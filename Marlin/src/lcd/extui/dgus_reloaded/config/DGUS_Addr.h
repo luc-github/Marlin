@@ -95,6 +95,7 @@ enum class DGUS_Addr : uint16_t {
   POWERLOSS_Resume          = 0x202D, // Popup / Data: DGUS_Data::Popup
   WAIT_Abort                = 0x202E, // Popup / Data: DGUS_Data::Popup
   WAIT_Continue             = 0x202F,
+  EXHAUST_TOGGLE            = 0x2030,
 
   // WRITE-ONLY VARIABLES
 
@@ -164,6 +165,7 @@ enum class DGUS_Addr : uint16_t {
   PID_Cycles                = 0x4021, // Type: Integer (16 bits unsigned)
   VOLUME_Level              = 0x4022, // Type: Integer (16 bits unsigned) / Data: volume as percent (0-100)
   BRIGHTNESS_Level          = 0x4023, // Type: Integer (16 bits unsigned) / Data: brightness as percent (0-100)
+  LASER_Level               = 0x4024, // Type: Integer (16 bits unsigned) / Data: brightness as percent (0-100)
 
   // SPECIAL CASES
 

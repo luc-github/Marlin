@@ -488,7 +488,8 @@ void GcodeSuite::G28() {
       #endif
 
       SECONDARY_AXIS_CODE(
-        if (doI) homeaxis(I_AXIS),
+        // if (doI) homeaxis(I_AXIS),
+        if (doI) set_axis_is_at_home(I_AXIS),
         if (doJ) homeaxis(J_AXIS),
         if (doK) homeaxis(K_AXIS),
         if (doU) homeaxis(U_AXIS),

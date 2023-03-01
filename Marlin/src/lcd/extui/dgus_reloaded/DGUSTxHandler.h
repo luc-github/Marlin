@@ -69,6 +69,7 @@ namespace DGUSTxHandler {
   void WaitIcons(DGUS_VP &);
 
   void FanSpeed(DGUS_VP &);
+  void LaserLevel(DGUS_VP &);
 
   void Volume(DGUS_VP &);
 

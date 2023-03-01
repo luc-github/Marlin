@@ -72,6 +72,8 @@ namespace DGUSRxHandler {
 
   void ResetEEPROM(DGUS_VP &, void *);
 
+  void ToggleExhaust(DGUS_VP &, void *);
+
   void SettingsExtra(DGUS_VP &, void *);
 
   void PIDSelect(DGUS_VP &, void *);
@@ -87,6 +89,7 @@ namespace DGUSRxHandler {
   void WaitContinue(DGUS_VP &, void *);
 
   void FanSpeed(DGUS_VP &, void *);
+  void LaserLevel(DGUS_VP &, void *);
 
   void Volume(DGUS_VP &, void *);
 

@@ -134,6 +134,7 @@ const struct DGUS_VP vp_list[] PROGMEM = {
   VP_HELPER_RX_NODATA(DGUS_Addr::GCODE_Execute, &DGUSRxHandler::GcodeExecute),
 
   VP_HELPER_RX(DGUS_Addr::EEPROM_Reset, &DGUSRxHandler::ResetEEPROM),
+  VP_HELPER_RX(DGUS_Addr::EXHAUST_TOGGLE, &DGUSRxHandler::ToggleExhaust),
 
   VP_HELPER_RX(DGUS_Addr::SETTINGS2_Extra, &DGUSRxHandler::SettingsExtra),
 
@@ -327,6 +328,13 @@ const struct DGUS_VP vp_list[] PROGMEM = {
             nullptr,
             &DGUSRxHandler::FanSpeed,
             &DGUSTxHandler::FanSpeed),
+
+  VP_HELPER(DGUS_Addr::LASER_Level,
+            2,
+            VPFLAG_AUTOUPLOAD,
+            nullptr,
+            &DGUSRxHandler::LaserLevel,
+            &DGUSTxHandler::LaserLevel),
 
   VP_HELPER(DGUS_Addr::GCODE_Data,
             DGUS_GCODE_LEN,

@@ -27,6 +27,10 @@
 #include "../gcode.h"
 #include "../../module/planner.h"
 
+#if ENABLED(ESP3D_WIFISUPPORT)
+  #include <esp3dlib.h>
+#endif
+
 #if ENABLED(COOLANT_MIST)
   /**
    * M7: Mist Coolant On
@@ -48,6 +52,9 @@
    */
   void GcodeSuite::M8() {
     planner.synchronize();                            // Wait for move to arrive
+    #if ENABLED(ESP3D_WIFISUPPORT)
+      mqttClient.publish("marlin/m8", 0, true, "");
+    #endif
     #if ENABLED(COOLANT_FLOOD)
       WRITE(COOLANT_FLOOD_PIN, !(COOLANT_FLOOD_INVERT)); // Turn on Flood coolant
     #endif
@@ -63,6 +70,9 @@
  */
 void GcodeSuite::M9() {
   planner.synchronize();                              // Wait for move to arrive
+  #if ENABLED(ESP3D_WIFISUPPORT)
+    mqttClient.publish("marlin/m9", 0, true, "");
+  #endif
   #if ENABLED(COOLANT_MIST)
     WRITE(COOLANT_MIST_PIN, COOLANT_MIST_INVERT);     // Turn off Mist coolant
   #endif

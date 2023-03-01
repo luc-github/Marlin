@@ -27,11 +27,18 @@
 #include "../gcode.h"
 #include "../../feature/spindle_laser.h"
 
+#if ENABLED(ESP3D_WIFISUPPORT)
+  #include <esp3dlib.h>
+#endif
+
 /**
  * M10: Vacuum or Blower On
  */
 void GcodeSuite::M10() {
   cutter.air_evac_enable();   // Turn on Vacuum or Blower motor
+  #if ENABLED(ESP3D_WIFISUPPORT)
+    mqttClient.publish("marlin/m10", 0, true, "");
+  #endif
 }
 
 /**
@@ -39,6 +46,9 @@ void GcodeSuite::M10() {
  */
 void GcodeSuite::M11() {
   cutter.air_evac_disable();  // Turn off Vacuum or Blower motor
+  #if ENABLED(ESP3D_WIFISUPPORT)
+    mqttClient.publish("marlin/m11", 0, true, "");
+  #endif
 }
 
 #endif // AIR_EVACUATION

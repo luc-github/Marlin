@@ -111,6 +111,7 @@
 #endif
 
 namespace ExtUI {
+  long laser_level = 0;
   static struct {
     uint8_t printer_killed : 1;
     #if ENABLED(JOYSTICK)
@@ -305,6 +306,10 @@ namespace ExtUI {
   float getTargetFan_percent(const fan_t fan) {
     UNUSED(fan);
     return TERN0(HAS_FAN, thermalManager.fanSpeedPercent(fan - FAN0));
+  }
+
+  float getTargetLaser_percent() {
+    return laser_level;
   }
 
   float getActualFan_percent(const fan_t fan) {
@@ -1069,6 +1074,10 @@ namespace ExtUI {
       UNUSED(value);
       UNUSED(fan);
     #endif
+  }
+
+  void setTargetLaser_percent(const_float_t value) {
+    laser_level = map(constrain(value, 0, 100), 0, 100, 0, 255);
   }
 
   void setFeedrate_percent(const_float_t value) { feedrate_percentage = constrain(value, 10, 500); }

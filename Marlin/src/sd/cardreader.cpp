@@ -303,7 +303,7 @@ void CardReader::printListing(
       // Get a new directory object using the full path
       // and dive recursively into it.
       SdFile child; // child.close() in destructor
-      if (child.open(&parent, dosFilename, O_READ)) {
+      if (child.open(&parent, dosFilename, O_SDREAD)) {
         #if ENABLED(LONG_FILENAME_HOST_SUPPORT)
           if (includeLongNames) {
             size_t lenPrependLong = prependLong ? strlen(prependLong) + 1 : 0;
@@ -401,7 +401,7 @@ void CardReader::ls(
 
       // Open the sub-item as the new dive parent
       SdFile dir;
-      if (!dir.open(&diveDir, segment, O_READ)) {
+      if (!dir.open(&diveDir, segment, O_SDREAD)) {
         SERIAL_EOL();
         SERIAL_ECHO_START();
         SERIAL_ECHOPGM(STR_SD_CANT_OPEN_SUBDIR, segment);
@@ -692,7 +692,7 @@ void CardReader::openFileRead(const char * const path, const uint8_t subcall_typ
   const char * const fname = diveToFile(true, diveDir, path);
   if (!fname) return;
 
-  if (file.open(diveDir, fname, O_READ)) {
+  if (file.open(diveDir, fname, O_SDREAD)) {
     filesize = file.fileSize();
     sdpos = 0;
 
@@ -709,7 +709,7 @@ void CardReader::openFileRead(const char * const path, const uint8_t subcall_typ
     openFailed(fname);
 }
 
-inline void echo_write_to_file(const char * const fname) {
+inline void echO_SDWRITE_to_file(const char * const fname) {
   SERIAL_ECHOLNPGM(STR_SD_WRITE_TO_FILE, fname);
 }
 
@@ -731,11 +731,11 @@ void CardReader::openFileWrite(const char * const path) {
   #if ENABLED(SDCARD_READONLY)
     openFailed(fname);
   #else
-    if (file.open(diveDir, fname, O_CREAT | O_APPEND | O_WRITE | O_TRUNC)) {
+    if (file.open(diveDir, fname, O_SDCREAT | O_SDAPPEND | O_SDWRITE | O_SDTRUNC)) {
       flag.saving = true;
       selectFileByName(fname);
       TERN_(EMERGENCY_PARSER, emergency_parser.disable());
-      echo_write_to_file(fname);
+      echO_SDWRITE_to_file(fname);
       ui.set_status(fname);
     }
     else
@@ -764,7 +764,7 @@ bool CardReader::fileExists(const char * const path) {
 
   // Try to open the file and return the result
   SdFile tmpFile;
-  const bool success = tmpFile.open(diveDir, fname, O_READ);
+  const bool success = tmpFile.open(diveDir, fname, O_SDREAD);
   if (success) tmpFile.close();
   return success;
 }
@@ -980,7 +980,7 @@ const char* CardReader::diveToFile(const bool update_cwd, SdFile* &inDirPtr, con
 
     // Open inDirPtr (closing first)
     sub->close();
-    if (!sub->open(inDirPtr, dosSubdirname, O_READ)) {
+    if (!sub->open(inDirPtr, dosSubdirname, O_SDREAD)) {
       openFailed(dosSubdirname);
       atom_ptr = nullptr;
       break;
@@ -1025,7 +1025,7 @@ const char* CardReader::diveToFile(const bool update_cwd, SdFile* &inDirPtr, con
 void CardReader::cd(const char * relpath) {
   SdFile newDir, *parent = &getWorkDir();
 
-  if (newDir.open(parent, relpath, O_READ)) {
+  if (newDir.open(parent, relpath, O_SDREAD)) {
     workDir = newDir;
     flag.workDirIsRoot = false;
     if (workDirDepth < MAX_DIR_DEPTH)
@@ -1324,7 +1324,7 @@ void CardReader::fileHasFinished() {
 #if ENABLED(POWER_LOSS_RECOVERY)
 
   bool CardReader::jobRecoverFileExists() {
-    const bool exists = recovery.file.open(&root, recovery.filename, O_READ);
+    const bool exists = recovery.file.open(&root, recovery.filename, O_SDREAD);
     if (exists) recovery.file.close();
     return exists;
   }
@@ -1332,10 +1332,10 @@ void CardReader::fileHasFinished() {
   void CardReader::openJobRecoveryFile(const bool read) {
     if (!isMounted()) return;
     if (recovery.file.isOpen()) return;
-    if (!recovery.file.open(&root, recovery.filename, read ? O_READ : O_CREAT | O_WRITE | O_TRUNC | O_SYNC))
+    if (!recovery.file.open(&root, recovery.filename, read ? O_SDREAD : O_SDCREAT | O_SDWRITE | O_SDTRUNC | O_SYNC))
       openFailed(recovery.filename);
     else if (!read)
-      echo_write_to_file(recovery.filename);
+      echO_SDWRITE_to_file(recovery.filename);
   }
 
   // Removing the job recovery file currently requires closing

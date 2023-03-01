@@ -60,6 +60,11 @@
   #endif
 #endif
 
+#if HAS_DGUS_LCD
+  #define LCD_SERIAL Serial2
+  #define SERIAL_GET_TX_BUFFER_FREE() LCD_SERIAL.availableForWrite()
+#endif
+
 #define CRITICAL_SECTION_START() portENTER_CRITICAL(&hal.spinlock)
 #define CRITICAL_SECTION_END()   portEXIT_CRITICAL(&hal.spinlock)
 

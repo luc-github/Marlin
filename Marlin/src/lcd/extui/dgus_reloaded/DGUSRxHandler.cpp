@@ -42,6 +42,8 @@
   #include "../../../feature/powerloss.h"
 #endif
 
+bool exhaust_on = false;
+
 void DGUSRxHandler::ScreenChange(DGUS_VP &vp, void *data_ptr) {
   const DGUS_Screen screen = (DGUS_Screen)((uint8_t*)data_ptr)[1];
 
@@ -786,6 +788,21 @@ void DGUSRxHandler::ResetEEPROM(DGUS_VP &vp, void *data_ptr) {
   queue.enqueue_now_P(DGUS_CMD_EEPROM_SAVE);
 }
 
+void DGUSRxHandler::ToggleExhaust(DGUS_VP &vp, void *data_ptr) {
+  UNUSED(vp);
+
+  if (exhaust_on) {
+    exhaust_on = false;
+    dgus_screen_handler.SetStatusMessage(PSTR("Exhaust OFF..."));
+    queue.enqueue_now(F("M11"));
+
+  } else {
+    exhaust_on = true;
+    dgus_screen_handler.SetStatusMessage(PSTR("Exhaust ON..."));
+    queue.enqueue_now(F("M10"));
+  }
+}
+
 void DGUSRxHandler::SettingsExtra(DGUS_VP &vp, void *data_ptr) {
   UNUSED(vp);
 
@@ -1002,6 +1019,20 @@ void DGUSRxHandler::FanSpeed(DGUS_VP &vp, void *data_ptr) {
     default: return;
     case DGUS_Addr::FAN0_Speed:
       ExtUI::setTargetFan_percent(speed, ExtUI::FAN0);
+      break;
+  }
+}
+
+void DGUSRxHandler::LaserLevel(DGUS_VP &vp, void *data_ptr) {
+  uint8_t laser_level = ((uint8_t*)data_ptr)[1];
+  uint8_t laser_level_value = 2.55F * laser_level;
+  switch (vp.addr) {
+    default: return;
+    case DGUS_Addr::LASER_Level:
+      ExtUI::setTargetLaser_percent(laser_level);
+      char llevel[10];
+      snprintf_P(llevel, sizeof(llevel), PSTR("M3 S%03d"), laser_level_value);
+      queue.enqueue_now(F(llevel));
       break;
   }
 }

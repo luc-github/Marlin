@@ -53,7 +53,7 @@
 #define X_STOP_PIN                            33
 #define Y_STOP_PIN                            32
 #define Z_STOP_PIN                            22
-//#define FIL_RUNOUT_PIN                      35
+#define FIL_RUNOUT_PIN                      35
 
 //
 // Enable I2S stepper stream
@@ -84,13 +84,13 @@
 #define E0_DIR_PIN                           139
 #define E0_ENABLE_PIN                        137
 
-#define E1_STEP_PIN                          141
-#define E1_DIR_PIN                           142
-#define E1_ENABLE_PIN                        140
+#define I_STEP_PIN                          141
+#define I_DIR_PIN                           142
+#define I_ENABLE_PIN                        140
 
-#define Z2_STEP_PIN                          141
-#define Z2_DIR_PIN                           142
-#define Z2_ENABLE_PIN                        140
+// #define Z2_STEP_PIN                          141
+// #define Z2_DIR_PIN                           142
+// #define Z2_ENABLE_PIN                        140
 
 //
 // Temperature Sensors
@@ -116,6 +116,8 @@
 // ADC Reference Voltage
 //
 #define ADC_REFERENCE_VOLTAGE                  2.565  // 2.5V reference VDDA
+
+#define I_MIN_PIN                             21
 
 /**
  *                ------                                 ------

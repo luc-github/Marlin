@@ -86,7 +86,7 @@ void DGUSScreenHandler::Init() {
 }
 
 void DGUSScreenHandler::Ready() {
-  dgus_display.PlaySound(1);
+  // dgus_display.PlaySound(1);
 }
 
 void DGUSScreenHandler::Loop() {

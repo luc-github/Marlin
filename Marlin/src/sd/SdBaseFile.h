@@ -47,18 +47,18 @@ struct filepos_t {
 };
 
 // use the gnu style oflag in open()
-uint8_t const O_READ = 0x01,                    // open() oflag for reading
-              O_RDONLY = O_READ,                // open() oflag - same as O_IN
-              O_WRITE = 0x02,                   // open() oflag for write
-              O_WRONLY = O_WRITE,               // open() oflag - same as O_WRITE
-              O_RDWR = (O_READ | O_WRITE),      // open() oflag for reading and writing
-              O_ACCMODE = (O_READ | O_WRITE),   // open() oflag mask for access modes
-              O_APPEND = 0x04,                  // The file offset shall be set to the end of the file prior to each write.
-              O_SYNC = 0x08,                    // Synchronous writes - call sync() after each write
-              O_TRUNC = 0x10,                   // Truncate the file to zero length
-              O_AT_END = 0x20,                  // Set the initial position at the end of the file
-              O_CREAT = 0x40,                   // Create the file if nonexistent
-              O_EXCL = 0x80;                    // If O_CREAT and O_EXCL are set, open() shall fail if the file exists
+uint8_t const O_SDREAD = 0x01,                    // open() oflag for reading
+              O_SDRDONLY = 0x01,                // open() oflag - same as O_IN
+              O_SDWRITE = 0x02,                   // open() oflag for write
+              O_SDWRONLY = O_SDWRITE,               // open() oflag - same as O_SDWRITE
+              O_SDRDWR = (O_SDREAD | O_SDWRITE),      // open() oflag for reading and writing
+              O_SDACCMODE = (O_SDREAD | O_SDWRITE),   // open() oflag mask for access modes
+              O_SDAPPEND = 0x04,                  // The file offset shall be set to the end of the file prior to each write.
+              O_SDSYNC = 0x08,                    // Synchronous writes - call sync() after each write
+              O_SDTRUNC = 0x10,                   // Truncate the file to zero length
+              O_SDAT_END = 0x20,                  // Set the initial position at the end of the file
+              O_SDCREAT = 0x40,                   // Create the file if nonexistent
+              O_SDEXCL = 0x80;                    // If O_CREAT and O_EXCL are set, open() shall fail if the file exists
 
 // SdBaseFile class static and const definitions
 
@@ -289,7 +289,7 @@ class SdBaseFile {
   bool mkdir(SdBaseFile *dir, const char *path, bool pFlag = true);
   bool open(SdBaseFile *dirFile, uint16_t index, uint8_t oflag);
   bool open(SdBaseFile *dirFile, const char *path, uint8_t oflag);
-  bool open(const char *path, uint8_t oflag = O_READ);
+  bool open(const char *path, uint8_t oflag = O_SDREAD);
   bool openNext(SdBaseFile *dirFile, uint8_t oflag);
   bool openRoot(SdVolume *vol);
   int peek();
@@ -351,7 +351,7 @@ class SdBaseFile {
   static void (*dateTime_)(uint16_t *date, uint16_t *time);
 
   // bits defined in flags_
-  static uint8_t const F_OFLAG = (O_ACCMODE | O_APPEND | O_SYNC),   // should be 0x0F
+  static uint8_t const F_OFLAG = (O_SDACCMODE | O_SDAPPEND | O_SDSYNC),   // should be 0x0F
                        F_FILE_DIR_DIRTY = 0x80;                     // sync of directory entry required
 
   // private data

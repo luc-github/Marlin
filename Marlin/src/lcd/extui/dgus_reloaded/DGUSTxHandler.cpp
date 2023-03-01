@@ -591,6 +591,17 @@ void DGUSTxHandler::FanSpeed(DGUS_VP &vp) {
   dgus_display.Write((uint16_t)vp.addr, Swap16(fan_speed));
 }
 
+void DGUSTxHandler::LaserLevel(DGUS_VP &vp) {
+  uint16_t laser_level;
+
+  switch (vp.addr) {
+    default: return;
+    case DGUS_Addr::LASER_Level: laser_level = ExtUI::getTargetLaser_percent(); break;
+  }
+
+  dgus_display.Write((uint16_t)vp.addr, Swap16(laser_level));
+}
+
 void DGUSTxHandler::Volume(DGUS_VP &vp) {
   const uint16_t volume = dgus_display.GetVolume();
 

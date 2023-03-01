@@ -1,6 +1,6 @@
 <p align="center"><img src="buildroot/share/pixmaps/logo/marlin-outrun-nf-500.png" height="250" alt="MarlinFirmware's logo" /></p>
 
-<h1 align="center">Marlin 3D Printer Firmware</h1>
+<h1 align="center">Marlin 3D Printer/Laser Firmware / NWa Version for MKS Tinybee</h1>
 
 <p align="center">
     <a href="/LICENSE"><img alt="GPL-V3.0 License" src="https://img.shields.io/github/license/marlinfirmware/marlin.svg"></a>
@@ -14,6 +14,14 @@
 
 Additional documentation can be found at the [Marlin Home Page](https://marlinfw.org/).
 Please test this firmware and let us know if it misbehaves in any way. Volunteers are standing by!
+
+## Special features included
+  - Support for Laser PWM
+  - DGUS T5L 480x480 UI
+  - Rotary AXIS oon E2
+  - Z with BLTouch
+  - MQTT for AIR assist / Exhaust
+  - EPS3D v.3.0, modified for MQTT : topic marlin/#
 
 ## Marlin 2.1
 

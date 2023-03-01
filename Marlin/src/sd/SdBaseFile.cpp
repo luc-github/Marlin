@@ -162,7 +162,7 @@ bool SdBaseFile::createContiguous(SdBaseFile *dirFile, const char *path, uint32_
   uint32_t count;
   // don't allow zero length file
   if (size == 0) return false;
-  if (!open(dirFile, path, O_CREAT | O_EXCL | O_RDWR)) return false;
+  if (!open(dirFile, path, O_SDCREAT | O_SDEXCL | O_SDRDWR)) return false;
 
   // calculate number of clusters needed
   count = ((size - 1) >> (vol_->clusterSizeShift_ + 9)) + 1;
@@ -231,7 +231,7 @@ void SdBaseFile::dirName(const dir_t &dir, char *name) {
  */
 bool SdBaseFile::exists(const char *name) {
   SdBaseFile file;
-  return file.open(this, name, O_READ);
+  return file.open(this, name, O_SDREAD);
 }
 
 /**
@@ -329,7 +329,7 @@ void SdBaseFile::ls(uint8_t flags, uint8_t indent) {
     if (status > 1 && (flags & LS_R)) {
       uint16_t index = curPosition() / 32 - 1;
       SdBaseFile s;
-      if (s.open(this, index, O_READ)) s.ls(flags, indent + 2);
+      if (s.open(this, index, O_SDREAD)) s.ls(flags, indent + 2);
       seekSet(32 * (index + 1));
     }
   }
@@ -463,7 +463,7 @@ bool SdBaseFile::mkdir(SdBaseFile *parent, const char *path, bool pFlag) {
     if (!TERN(LONG_FILENAME_WRITE_SUPPORT, parsePath(path, dname, dlname, &path), make83Name(path, dname, &path))) return false;
     while (*path == '/') path++;
     if (!*path) break;
-    if (!sub->open(parent, dname OPTARG(LONG_FILENAME_WRITE_SUPPORT, dlname), O_READ)) {
+    if (!sub->open(parent, dname OPTARG(LONG_FILENAME_WRITE_SUPPORT, dlname), O_SDREAD)) {
       if (!pFlag || !sub->mkdir(parent, dname OPTARG(LONG_FILENAME_WRITE_SUPPORT, dlname)))
         return false;
     }
@@ -482,10 +482,10 @@ bool SdBaseFile::mkdir(SdBaseFile *parent, const uint8_t dname[11]
   if (!parent->isDir()) return false;
 
   // create a normal file
-  if (!open(parent, dname OPTARG(LONG_FILENAME_WRITE_SUPPORT, dlname), O_CREAT | O_EXCL | O_RDWR)) return false;
+  if (!open(parent, dname OPTARG(LONG_FILENAME_WRITE_SUPPORT, dlname), O_SDCREAT | O_SDEXCL | O_SDRDWR)) return false;
 
   // convert file to directory
-  flags_ = O_READ;
+  flags_ = O_SDREAD;
   type_ = FAT_FILE_TYPE_SUBDIR;
 
   // allocate and zero first cluster
@@ -556,9 +556,9 @@ bool SdBaseFile::open(const char *path, uint8_t oflag) {
  * \param[in] oflag Values for \a oflag are constructed by a bitwise-inclusive
  * OR of flags from the following list
  *
- * O_READ - Open for reading.
+ * O_SDREAD - Open for reading.
  *
- * O_RDONLY - Same as O_READ.
+ * O_RDONLY - Same as O_SDREAD.
  *
  * O_WRITE - Open for writing.
  *
@@ -618,7 +618,7 @@ bool SdBaseFile::open(SdBaseFile *dirFile, const char *path, uint8_t oflag) {
     if (!TERN(LONG_FILENAME_WRITE_SUPPORT, parsePath(path, dname, dlname, &path), make83Name(path, dname, &path))) return false;
     while (*path == '/') path++;
     if (!*path) break;
-    if (TERN0(LONG_FILENAME_WRITE_SUPPORT, !sub->open(parent, dname, dlname, O_READ))) return false;
+    if (TERN0(LONG_FILENAME_WRITE_SUPPORT, !sub->open(parent, dname, dlname, O_SDREAD))) return false;
     if (parent != dirFile) parent->close();
     parent = sub;
     sub = parent != &dir1 ? &dir1 : &dir2;
@@ -744,7 +744,7 @@ bool SdBaseFile::open(SdBaseFile *dirFile, const uint8_t dname[11]
   }
   else {
     // don't create unless O_CREAT and O_WRITE
-    if ((oflag & (O_CREAT | O_WRITE)) != (O_CREAT | O_WRITE)) return false;
+    if ((oflag & (O_SDCREAT | O_SDWRITE)) != (O_SDCREAT | O_SDWRITE)) return false;
 
     #if ENABLED(LONG_FILENAME_WRITE_SUPPORT)
 
@@ -867,7 +867,7 @@ bool SdBaseFile::open(SdBaseFile *dirFile, const uint8_t dname[11]
  * opened.  The value for \a index is (directory file position)/32.
  *
  * \param[in] oflag Values for \a oflag are constructed by a bitwise-inclusive
- * OR of flags O_READ, O_WRITE, O_TRUNC, and O_SYNC.
+ * OR of flags O_SDREAD, O_WRITE, O_TRUNC, and O_SYNC.
  *
  * See open() by path for definition of flags.
  * \return true for success or false for failure.
@@ -879,7 +879,7 @@ bool SdBaseFile::open(SdBaseFile *dirFile, uint16_t index, uint8_t oflag) {
   if (isOpen() || !dirFile) return false;
 
   // don't open existing file if O_EXCL - user call error
-  if (oflag & O_EXCL) return false;
+  if (oflag & O_SDEXCL) return false;
 
   // seek to location of entry
   if (!dirFile->seekSet(32 * index)) return false;
@@ -910,7 +910,7 @@ bool SdBaseFile::openCachedEntry(uint8_t dirIndex, uint8_t oflag) {
 
   // write or truncate is an error for a directory or read-only file
   if (p->attributes & (DIR_ATT_READ_ONLY | DIR_ATT_DIRECTORY)) {
-    if (oflag & (O_WRITE | O_TRUNC)) goto FAIL;
+    if (oflag & (O_SDWRITE | O_SDTRUNC)) goto FAIL;
   }
   // remember location of directory entry on SD
   dirBlock_ = vol_->cacheBlockNumber();
@@ -938,8 +938,8 @@ bool SdBaseFile::openCachedEntry(uint8_t dirIndex, uint8_t oflag) {
   // set to start of file
   curCluster_ = 0;
   curPosition_ = 0;
-  if ((oflag & O_TRUNC) && !truncate(0)) return false;
-  return oflag & O_AT_END ? seekEnd(0) : true;
+  if ((oflag & O_SDTRUNC) && !truncate(0)) return false;
+  return oflag & O_SDAT_END ? seekEnd(0) : true;
 
   FAIL:
   type_ = FAT_FILE_TYPE_CLOSED;
@@ -953,7 +953,7 @@ bool SdBaseFile::openCachedEntry(uint8_t dirIndex, uint8_t oflag) {
  * file to be opened.
  *
  * \param[in] oflag Values for \a oflag are constructed by a bitwise-inclusive
- * OR of flags O_READ, O_WRITE, O_TRUNC, and O_SYNC.
+ * OR of flags O_SDREAD, O_WRITE, O_TRUNC, and O_SYNC.
  *
  * See open() by path for definition of flags.
  * \return true for success or false for failure.
@@ -1212,7 +1212,7 @@ bool SdBaseFile::openParent(SdBaseFile *dir) {
   if (p->firstClusterHigh == 0 && p->firstClusterLow == 0) {
     if (!file.openRoot(dir->volume())) return false;
   }
-  else if (!file.openCachedEntry(1, O_READ))
+  else if (!file.openCachedEntry(1, O_SDREAD))
     return false;
 
   // search for parent in '../..'
@@ -1223,7 +1223,7 @@ bool SdBaseFile::openParent(SdBaseFile *dir) {
   } while (c != cluster);
 
   // open parent
-  return open(&file, file.curPosition() / 32 - 1, O_READ);
+  return open(&file, file.curPosition() / 32 - 1, O_SDREAD);
 }
 #endif
 
@@ -1255,7 +1255,7 @@ bool SdBaseFile::openRoot(SdVolume *vol) {
 
   vol_ = vol;
   // read only
-  flags_ = O_READ;
+  flags_ = O_SDREAD;
 
   // set to start of file
   curCluster_ = curPosition_ = 0;
@@ -1369,7 +1369,7 @@ int16_t SdBaseFile::read(void *buf, uint16_t nbyte) {
   uint32_t block;  // raw device block number
 
   // error if not open or write only
-  if (!isOpen() || !(flags_ & O_READ)) return -1;
+  if (!isOpen() || !(flags_ & O_SDREAD)) return -1;
 
   // max bytes left in file
   NOMORE(nbyte, fileSize_ - curPosition_);
@@ -1665,7 +1665,7 @@ bool SdBaseFile::remove(SdBaseFile *dirFile, const char *path) {
   if (ENABLED(SDCARD_READONLY)) return false;
 
   SdBaseFile file;
-  return file.open(dirFile, path, O_WRITE) ? file.remove() : false;
+  return file.open(dirFile, path, O_SDWRITE) ? file.remove() : false;
 }
 
 /**
@@ -1704,7 +1704,7 @@ bool SdBaseFile::rename(SdBaseFile *dirFile, const char *newPath) {
   // make directory entry for new path
   SdBaseFile file;
   if (isFile()) {
-    if (!file.open(dirFile, newPath, O_CREAT | O_EXCL | O_WRITE)) {
+    if (!file.open(dirFile, newPath, O_SDCREAT | O_SDEXCL | O_SDWRITE)) {
       goto restore;
     }
   }
@@ -1792,7 +1792,7 @@ bool SdBaseFile::rmdir() {
   }
   // convert empty directory to normal file for remove
   type_ = FAT_FILE_TYPE_NORMAL;
-  flags_ |= O_WRITE;
+  flags_ |= O_SDWRITE;
   return remove();
 }
 
@@ -1833,14 +1833,14 @@ bool SdBaseFile::rmRfStar() {
     // skip if part of long file name or volume label in root
     if (!DIR_IS_FILE_OR_SUBDIR(p)) continue;
 
-    if (!f.open(this, index, O_READ)) return false;
+    if (!f.open(this, index, O_SDREAD)) return false;
     if (f.isSubDir()) {
       // recursively delete
       if (!f.rmRfStar()) return false;
     }
     else {
       // ignore read-only
-      f.flags_ |= O_WRITE;
+      f.flags_ |= O_SDWRITE;
       if (!f.remove()) return false;
     }
     // position to next entry if required
@@ -2076,7 +2076,7 @@ bool SdBaseFile::truncate(uint32_t length) {
 
   uint32_t newPos;
   // error if not a normal file or read-only
-  if (!isFile() || !(flags_ & O_WRITE)) return false;
+  if (!isFile() || !(flags_ & O_SDWRITE)) return false;
 
   // error if length is greater than current size
   if (length > fileSize_) return false;
@@ -2145,10 +2145,10 @@ int16_t SdBaseFile::write(const void *buf, uint16_t nbyte) {
   uint16_t nToWrite = nbyte;
 
   // error if not a normal file or is read-only
-  if (!isFile() || !(flags_ & O_WRITE)) goto FAIL;
+  if (!isFile() || !(flags_ & O_SDWRITE)) goto FAIL;
 
   // seek to end of file if append flag
-  if ((flags_ & O_APPEND) && curPosition_ != fileSize_) {
+  if ((flags_ & O_SDAPPEND) && curPosition_ != fileSize_) {
     if (!seekEnd()) goto FAIL;
   }
 
@@ -2222,7 +2222,7 @@ int16_t SdBaseFile::write(const void *buf, uint16_t nbyte) {
     flags_ |= F_FILE_DIR_DIRTY;
   }
 
-  if (flags_ & O_SYNC) {
+  if (flags_ & O_SDSYNC) {
     if (!sync()) goto FAIL;
   }
   return nbyte;

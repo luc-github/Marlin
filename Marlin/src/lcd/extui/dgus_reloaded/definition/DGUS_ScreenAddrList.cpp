@@ -69,6 +69,7 @@ constexpr DGUS_Addr LIST_PRINT_ADJUST[] PROGMEM = {
   DGUS_Addr::ADJUST_Feedrate,
   DGUS_Addr::ADJUST_Flowrate_CUR,
   DGUS_Addr::LEVEL_OFFSET_Current,
+  DGUS_Addr::LASER_Level,
   (DGUS_Addr)0
 };
 

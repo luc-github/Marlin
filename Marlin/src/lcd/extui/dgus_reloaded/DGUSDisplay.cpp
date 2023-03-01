@@ -377,7 +377,8 @@ void DGUSDisplay::FlushTx() {
   #ifdef ARDUINO_ARCH_STM32
     LCD_SERIAL.flush();
   #else
-    LCD_SERIAL.flushTX();
+    LCD_SERIAL.flush();
+    // LCD_SERIAL.flushTX();
   #endif
 }
 
