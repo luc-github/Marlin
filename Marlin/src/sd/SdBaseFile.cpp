@@ -739,7 +739,7 @@ bool SdBaseFile::open(SdBaseFile *dirFile, const uint8_t dname[11]
 
   if (fileFound) {
     // don't open existing file if O_EXCL
-    if (oflag & O_EXCL) return false;
+    if (oflag & O_SDEXCL) return false;
     TERN_(LONG_FILENAME_WRITE_SUPPORT, index &= 0xF);
   }
   else {

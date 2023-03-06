@@ -2,7 +2,7 @@
 #define CONFIGURATION_H_VERSION 02010100
 #define STRING_CONFIG_H_AUTHOR "NWa" // Who made the changes.
 #ifndef MOTHERBOARD
-  #define MOTHERBOARD BOARD_MKS_TINYBEE
+  #define MOTHERBOARD BOARD_BTT_GTR_V1_0
 #endif
 
 /**
@@ -16,8 +16,11 @@
 #define SERIAL_PORT -1
 #define BAUDRATE 115200
 
-#define SERIAL_PORT_2 1
+#define SERIAL_PORT_2 3
 #define BAUDRATE_2 115200   // :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000] Enable to override BAUDRATE
+
+#define SERIAL_PORT_3 1
+#define BAUDRATE_3 115200   // :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000] Enable to override BAUDRATE
 
 #define HARDWARE_SERIAL2_RX 16
 #define HARDWARE_SERIAL2_TX 17
@@ -42,12 +45,12 @@
  *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
  * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
-#define X_DRIVER_TYPE  A4988
-#define Y_DRIVER_TYPE  A4988
-#define Z_DRIVER_TYPE  A4988
-//#define X2_DRIVER_TYPE A4988
-//#define Y2_DRIVER_TYPE A4988
-//#define Z2_DRIVER_TYPE A4988
+#define X_DRIVER_TYPE  TMC2209
+#define Y_DRIVER_TYPE  TMC2209
+#define Z_DRIVER_TYPE  TMC2209
+//#define X2_DRIVER_TYPE TMC2209
+#define Y2_DRIVER_TYPE TMC2209
+#define Z2_DRIVER_TYPE TMC2209
 //#define Z3_DRIVER_TYPE A4988
 //#define Z4_DRIVER_TYPE A4988
 #define I_DRIVER_TYPE  A4988
@@ -57,7 +60,7 @@
 //#define V_DRIVER_TYPE  A4988
 //#define W_DRIVER_TYPE  A4988
 #define E0_DRIVER_TYPE A4988
-// #define E1_DRIVER_TYPE A4988
+#define E1_DRIVER_TYPE A4988
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
 //#define E4_DRIVER_TYPE A4988
@@ -222,7 +225,7 @@
  *
  */
 #define TEMP_SENSOR_0 1
-#define TEMP_SENSOR_1 0
+#define TEMP_SENSOR_1 1
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
 #define TEMP_SENSOR_4 0
@@ -822,7 +825,7 @@
  *
  * See https://github.com/synthetos/TinyG/wiki/Jerk-Controlled-Motion-Explained
  */
-//#define S_CURVE_ACCELERATION
+#define S_CURVE_ACCELERATION
 
 //===========================================================================
 //============================= Z Probe Options =============================
@@ -920,6 +923,8 @@
  *          Take extreme care when setting up this feature.
  */
 //#define SENSORLESS_PROBING
+
+#define NO_CONFIGURATION_EMBEDDING_WARNING
 
 /**
  * Nozzle-to-Probe offsets { X, Y, Z }
@@ -1249,7 +1254,7 @@
  * RAMPS-based boards use SERVO3_PIN for the first runout sensor.
  * For other boards you may need to define FIL_RUNOUT_PIN, FIL_RUNOUT2_PIN, etc.
  */
-// #define FILAMENT_RUNOUT_SENSOR
+#define FILAMENT_RUNOUT_SENSOR
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
   #define FIL_RUNOUT_ENABLED_DEFAULT true // Enable the sensor on startup. Override with M412 followed by M500.
   #define NUM_RUNOUT_SENSORS   1          // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
@@ -1838,7 +1843,7 @@
  *
  * View the current statistics with M78.
  */
-//#define PRINTCOUNTER
+#define PRINTCOUNTER
 #if ENABLED(PRINTCOUNTER)
   #define PRINTCOUNTER_SAVE_INTERVAL 60 // (minutes) EEPROM save interval during print. A value of 0 will save stats at end of print.
 #endif
@@ -1899,14 +1904,14 @@
  * SD Card support is disabled by default. If your controller has an SD slot,
  * you must uncomment the following option or it won't work.
  */
-// #define SDSUPPORT
+#define SDSUPPORT
 
 /**
  * SD CARD: ENABLE CRC
  *
  * Use CRC checks and retries on the SD communication.
  */
-// #define SD_CHECK_AND_RETRY
+#define SD_CHECK_AND_RETRY
 
 //
 // SPEAKER/BUZZER
@@ -1964,7 +1969,7 @@
 // @section extras
 
 // Support for the BariCUDA Paste Extruder
-//#define BARICUDA
+#define BARICUDA
 
 // @section servos
 
@@ -1990,3 +1995,5 @@
 
 // Disable servo with M282 to reduce power consumption, noise, and heat when not in use
 //#define SERVO_DETACH_GCODE
+
+#define NO_AUTO_ASSIGN_WARNING 1
