@@ -27,10 +27,6 @@
 #include "../gcode.h"
 #include "../../feature/spindle_laser.h"
 
-#if ENABLED(ESP3D_WIFISUPPORT)
-  #include <esp3dlib.h>
-#endif
-
 /**
  * M10: Vacuum or Blower On
  */

@@ -27,10 +27,6 @@
 #include "../gcode.h"
 #include "../../module/planner.h"
 
-#if ENABLED(ESP3D_WIFISUPPORT)
-  #include <esp3dlib.h>
-#endif
-
 #if ENABLED(COOLANT_MIST)
   /**
    * M7: Mist Coolant On

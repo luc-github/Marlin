@@ -392,7 +392,7 @@
 #define EXP2_06_PIN                         PB15
 #define EXP2_07_PIN                         PB10
 
-#define LASER_PWM_PIN                       PF13
+#define LASER_PWM_PIN                       PH10
 
 //
 // LCDs and Controllers
