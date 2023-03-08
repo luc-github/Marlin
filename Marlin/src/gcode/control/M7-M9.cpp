@@ -37,6 +37,7 @@
    */
   void GcodeSuite::M7() {
     planner.synchronize();                            // Wait for move to arrive
+    SERIAL_ECHO_MSG("[ESP940] M", 7);
     WRITE(COOLANT_MIST_PIN, !(COOLANT_MIST_INVERT));  // Turn on Mist coolant
   }
 #endif
@@ -52,9 +53,7 @@
    */
   void GcodeSuite::M8() {
     planner.synchronize();                            // Wait for move to arrive
-    #if ENABLED(ESP3D_WIFISUPPORT)
-      mqttClient.publish("marlin/m8", 0, true, "");
-    #endif
+    SERIAL_ECHO_MSG("[ESP940] M", 8);
     #if ENABLED(COOLANT_FLOOD)
       WRITE(COOLANT_FLOOD_PIN, !(COOLANT_FLOOD_INVERT)); // Turn on Flood coolant
     #endif
@@ -70,9 +69,7 @@
  */
 void GcodeSuite::M9() {
   planner.synchronize();                              // Wait for move to arrive
-  #if ENABLED(ESP3D_WIFISUPPORT)
-    mqttClient.publish("marlin/m9", 0, true, "");
-  #endif
+    SERIAL_ECHO_MSG("[ESP940] M", 9);
   #if ENABLED(COOLANT_MIST)
     WRITE(COOLANT_MIST_PIN, COOLANT_MIST_INVERT);     // Turn off Mist coolant
   #endif

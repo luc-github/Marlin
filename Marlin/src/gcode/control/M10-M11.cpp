@@ -36,9 +36,7 @@
  */
 void GcodeSuite::M10() {
   cutter.air_evac_enable();   // Turn on Vacuum or Blower motor
-  #if ENABLED(ESP3D_WIFISUPPORT)
-    mqttClient.publish("marlin/m10", 0, true, "");
-  #endif
+  SERIAL_ECHO_MSG("[ESP940] M", 10);
 }
 
 /**
@@ -46,9 +44,7 @@ void GcodeSuite::M10() {
  */
 void GcodeSuite::M11() {
   cutter.air_evac_disable();  // Turn off Vacuum or Blower motor
-  #if ENABLED(ESP3D_WIFISUPPORT)
-    mqttClient.publish("marlin/m11", 0, true, "");
-  #endif
+  SERIAL_ECHO_MSG("[ESP940] M", 11);
 }
 
 #endif // AIR_EVACUATION

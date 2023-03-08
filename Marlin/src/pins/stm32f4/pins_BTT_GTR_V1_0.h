@@ -43,7 +43,8 @@
 // Servos
 //
 #define SERVO0_PIN                          PB11  // BLTOUCH
-#define SOL0_PIN                            PC7   // Toolchanger
+// #define SOL0_PIN                            PC7   // Toolchanger
+#define SOL0_PIN                            PA9   // Toolchanger
 
 #if ENABLED(TOOL_SENSOR)
   #define TOOL_SENSOR1_PIN                  PH6
@@ -391,7 +392,7 @@
 #define EXP2_06_PIN                         PB15
 #define EXP2_07_PIN                         PB10
 
-#define LASER_PWM_PIN                         EXP1_03_PIN
+#define LASER_PWM_PIN                       PF13
 
 //
 // LCDs and Controllers
