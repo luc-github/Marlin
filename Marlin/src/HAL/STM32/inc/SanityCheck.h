@@ -84,28 +84,28 @@
   #endif
 // #endif
 // #if SERIAL_IN_USE(4)
-//   #if CHECK_SERIAL_PIN(TX,4)
-//     #error "Serial Port 4 TX IO pins conflict with another pin on the board."
-//   #endif
-//   #if CHECK_SERIAL_PIN(RX,4)
-//     #error "Serial Port 4 RX IO pins conflict with another pin on the board."
-//   #endif
+  #if CHECK_SERIAL_PIN(TX,4)
+    #error "Serial Port 4 TX IO pins conflict with another pin on the board."
+  #endif
+  #if CHECK_SERIAL_PIN(RX,4)
+    #error "Serial Port 4 RX IO pins conflict with another pin on the board."
+  #endif
 // #endif
 // #if SERIAL_IN_USE(5)
-//   #if CHECK_SERIAL_PIN(TX,5)
-//     #error "Serial Port 5 TX IO pins conflict with another pin on the board."
-//   #endif
-//   #if CHECK_SERIAL_PIN(RX,5)
-//     #error "Serial Port 5 RX IO pins conflict with another pin on the board."
-//   #endif
+  #if CHECK_SERIAL_PIN(TX,5)
+    #error "Serial Port 5 TX IO pins conflict with another pin on the board."
+  #endif
+  #if CHECK_SERIAL_PIN(RX,5)
+    #error "Serial Port 5 RX IO pins conflict with another pin on the board."
+  #endif
 // #endif
 // #if SERIAL_IN_USE(6)
-//   #if CHECK_SERIAL_PIN(TX,6)
-//     #error "Serial Port 6 TX IO pins conflict with another pin on the board."
-//   #endif
-//   #if CHECK_SERIAL_PIN(RX,6)
-//     #error "Serial Port 6 RX IO pins conflict with another pin on the board."
-//   #endif
+  #if CHECK_SERIAL_PIN(TX,6)
+    #error "Serial Port 6 TX IO pins conflict with another pin on the board."
+  #endif
+  #if CHECK_SERIAL_PIN(RX,6)
+    #error "Serial Port 6 RX IO pins conflict with another pin on the board."
+  #endif
 // #endif
 #undef CHECK_SERIAL_PIN
 #undef _CHECK_SERIAL_PIN
